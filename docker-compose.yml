@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  # Backend API
+  face-detection-api:
+    container_name: backend
+    image: face-detection-api
+    build: ./
+    command: npm start
+    working_dir: /usr/src/face-detection-api
+    environment:
+      # POSTGRES_USER: hola
+      # POSTGRES_PASSWORD: chau
+      # POSTGRES_PORT: 5432
+      # POSTGRES_DB: face-detection-docker
+      # POSTGRES_HOST: postgres
+      POSTGRES_URI: postgres://hola:chau@postgres:5432/face-detection-docker
+      REDIS_URI: redis://redis:6379
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/usr/src/face-detection-api
+
+  # Postgres
+  postgres:
+    container_name: postgres
+    build: ./postgres
+    environment:
+      POSTGRES_USER: hola
+      POSTGRES_PASSWORD: chau
+      POSTGRES_DB: face-detection-docker
+      POSTGRES_HOST: postgres
+    ports:
+      - 5432:5432
+
+  # Redis
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
